@@ -36,23 +36,33 @@ typedef bool cdf_bool;
 #define cdf_false ((cdf_bool) false)
 
 /*
- * Represents the possible data types for a data frame column
+ * Represents the possible data type kinds
  */
-typedef enum cdftype_t
+typedef enum cdf_data_type_kind_t
 {
-    CDFT_I8,   // 8 bit signed integer data frame column data type
-    CDFT_I16,  // 16 bit signed integer data frame column data type
-    CDFT_I32,  // 32 bit signed integer data frame column data type
-    CDFT_I64,  // 64 bit signed integer data frame column data type
-    CDFT_U8,   // 8 bit unsigned integer data frame column data type
-    CDFT_U16,  // 16 bit unsigned integer data frame column data type
-    CDFT_U32,  // 32 bit unsigned integer data frame column data type
-    CDFT_U64,  // 64 bit unsigned integer data frame column data type
-    CDFT_FLT,  // Single-precision floating-point number data frame column data type
-    CDFT_DBL,  // Double-precision floating-point number data frame column data type
-    CDFT_BOOL, // Boolean value data frame column data type
-    NCDFT,     // Number of data frame column data types
+    CDFT_I8,   // 8 bit signed integer data type kind
+    CDFT_I16,  // 16 bit signed integer data type kind
+    CDFT_I32,  // 32 bit signed integer data type kind
+    CDFT_I64,  // 64 bit signed integer data type kind
+    CDFT_U8,   // 8 bit unsigned integer data type kind
+    CDFT_U16,  // 16 bit unsigned integer data type kind
+    CDFT_U32,  // 32 bit unsigned integer data type kind
+    CDFT_U64,  // 64 bit unsigned integer data type kind
+    CDFT_FLT,  // Single-precision floating-point number data type kind
+    CDFT_DBL,  // Double-precision floating-point number data type kind
+    CDFT_BOOL, // Boolean value data type kind
+    NCDFT,     // Number of data type kinds
 
-} cdftype;
+} cdfdtk;
+
+/*
+ * Represents a data type
+ */
+typedef struct cdf_data_type_t
+{
+    cdfdtk kind; // Data type kind
+    cdf_u8 size; // Cached size of data type in bytes
+
+} cdfdt;
 
 #endif /* CDF_TYPES_H_ */
