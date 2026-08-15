@@ -53,6 +53,7 @@ cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out)
         out->size = sizeof(cdf_bool);
         break;
 
+    case CDFDTK_COUNT:
     default:
         return cdf_false;
     }
