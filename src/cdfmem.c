@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-cdf_bool cdf_alloc(cdf_usize size, void **out)
+cdf_bool cdf_alloc_impl(cdf_usize size, void **out)
 {
     void *ptr;
 
@@ -17,7 +17,7 @@ cdf_bool cdf_alloc(cdf_usize size, void **out)
     return cdf_true;
 }
 
-void cdf_free(void **ptr)
+void cdf_free_impl(void **ptr)
 {
     if (ptr == NULL)
         return;

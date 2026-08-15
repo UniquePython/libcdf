@@ -62,7 +62,9 @@ typedef struct cdf_data_type_t
 {
     cdfdtk kind; // Data type kind
     cdf_u8 size; // Cached size of data type in bytes
-
 } cdfdt;
+
+/** Initializes a data type descriptor for the specified data type kind. */
+cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out);
 
 #endif /* CDF_TYPES_H_ */
