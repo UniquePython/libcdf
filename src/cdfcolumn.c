@@ -156,3 +156,33 @@ cdf_bool cdfc_append(cdfc *column, const void *element)
 
     return cdf_true;
 }
+
+cdf_bool cdfc_get(const cdfc *column, cdf_usize index, void *out)
+{
+    if (column == NULL || out == NULL)
+        return cdf_false;
+
+    if (index >= column->nelements)
+        return cdf_false;
+
+    if (column->is_empty[index])
+        return cdf_false;
+
+    memcpy(out, (const char *)column->elements + index * column->type.size, column->type.size);
+
+    return cdf_true;
+}
+
+cdf_bool cdfc_set(cdfc *column, cdf_usize index, const void *value)
+{
+    if (column == NULL || value == NULL)
+        return cdf_false;
+
+    if (index >= column->nelements)
+        return cdf_false;
+
+    memcpy((char *)column->elements + index * column->type.size, value, column->type.size);
+    column->is_empty[index] = cdf_false;
+
+    return cdf_true;
+}

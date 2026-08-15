@@ -40,4 +40,29 @@ void cdfc_destroy(cdfc **column);
  */
 cdf_bool cdfc_append(cdfc *column, const void *element);
 
+/**
+ * Copies the element at the specified index into the output buffer.
+ *
+ * Success:
+ *   Copies the element into `out` and returns `cdf_true`.
+ *
+ * Failure:
+ *   Returns `cdf_false` if `column` or `out` is NULL, if `index` is out of
+ *   bounds, or if the element at `index` is empty. `out` is left untouched.
+ */
+cdf_bool cdfc_get(const cdfc *column, cdf_usize index, void *out);
+
+/**
+ * Sets the element at the specified index to the given value.
+ *
+ * Success:
+ *   Copies `value` into the element at `index`, marks the element as
+ *   non-empty, and returns `cdf_true`.
+ *
+ * Failure:
+ *   Returns `cdf_false` if `column` or `value` is NULL, or if `index` is out
+ *   of bounds. The column remains unchanged on failure.
+ */
+cdf_bool cdfc_set(cdfc *column, cdf_usize index, const void *value);
+
 #endif /* CDF_COLUMN_H_ */
