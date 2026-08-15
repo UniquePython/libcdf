@@ -40,18 +40,18 @@ typedef bool cdf_bool;
  */
 typedef enum cdf_data_type_kind_t
 {
-    CDFT_I8,   // 8 bit signed integer data type kind
-    CDFT_I16,  // 16 bit signed integer data type kind
-    CDFT_I32,  // 32 bit signed integer data type kind
-    CDFT_I64,  // 64 bit signed integer data type kind
-    CDFT_U8,   // 8 bit unsigned integer data type kind
-    CDFT_U16,  // 16 bit unsigned integer data type kind
-    CDFT_U32,  // 32 bit unsigned integer data type kind
-    CDFT_U64,  // 64 bit unsigned integer data type kind
-    CDFT_FLT,  // Single-precision floating-point number data type kind
-    CDFT_DBL,  // Double-precision floating-point number data type kind
-    CDFT_BOOL, // Boolean value data type kind
-    NCDFT,     // Number of data type kinds
+    CDFDTK_I8,    // 8 bit signed integer data type kind
+    CDFDTK_I16,   // 16 bit signed integer data type kind
+    CDFDTK_I32,   // 32 bit signed integer data type kind
+    CDFDTK_I64,   // 64 bit signed integer data type kind
+    CDFDTK_U8,    // 8 bit unsigned integer data type kind
+    CDFDTK_U16,   // 16 bit unsigned integer data type kind
+    CDFDTK_U32,   // 32 bit unsigned integer data type kind
+    CDFDTK_U64,   // 64 bit unsigned integer data type kind
+    CDFDTK_FLT,   // Single-precision floating-point number data type kind
+    CDFDTK_DBL,   // Double-precision floating-point number data type kind
+    CDFDTK_BOOL,  // Boolean value data type kind
+    CDFDTK_COUNT, // Number of data type kinds
 
 } cdfdtk;
 

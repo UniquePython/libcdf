@@ -2,54 +2,54 @@
 
 cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out)
 {
-    if (out == NULL || kind >= NCDFT)
+    if (out == NULL || kind >= CDFDTK_COUNT)
         return cdf_false;
 
     out->kind = kind;
 
     switch (kind)
     {
-    case CDFT_I8:
+    case CDFDTK_I8:
         out->size = sizeof(cdf_i8);
         break;
 
-    case CDFT_I16:
+    case CDFDTK_I16:
         out->size = sizeof(cdf_i16);
         break;
 
-    case CDFT_I32:
+    case CDFDTK_I32:
         out->size = sizeof(cdf_i32);
         break;
 
-    case CDFT_I64:
+    case CDFDTK_I64:
         out->size = sizeof(cdf_i64);
         break;
 
-    case CDFT_U8:
+    case CDFDTK_U8:
         out->size = sizeof(cdf_u8);
         break;
 
-    case CDFT_U16:
+    case CDFDTK_U16:
         out->size = sizeof(cdf_u16);
         break;
 
-    case CDFT_U32:
+    case CDFDTK_U32:
         out->size = sizeof(cdf_u32);
         break;
 
-    case CDFT_U64:
+    case CDFDTK_U64:
         out->size = sizeof(cdf_u64);
         break;
 
-    case CDFT_FLT:
+    case CDFDTK_FLT:
         out->size = sizeof(cdf_flt);
         break;
 
-    case CDFT_DBL:
+    case CDFDTK_DBL:
         out->size = sizeof(cdf_dbl);
         break;
 
-    case CDFT_BOOL:
+    case CDFDTK_BOOL:
         out->size = sizeof(cdf_bool);
         break;
 
