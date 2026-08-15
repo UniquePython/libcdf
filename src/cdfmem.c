@@ -25,3 +25,19 @@ void cdf_free_impl(void **ptr)
     free(*ptr);
     *ptr = NULL;
 }
+
+cdf_bool cdf_realloc_impl(cdf_usize size, void **ptr)
+{
+    void *new_ptr;
+
+    if (size == 0 || ptr == NULL)
+        return cdf_false;
+
+    new_ptr = realloc(*ptr, size);
+
+    if (new_ptr == NULL)
+        return cdf_false;
+
+    *ptr = new_ptr;
+    return cdf_true;
+}
