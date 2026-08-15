@@ -186,3 +186,19 @@ cdf_bool cdfc_set(cdfc *column, cdf_usize index, const void *value)
 
     return cdf_true;
 }
+
+cdf_usize cdfc_nelements(const cdfc *column)
+{
+    if (column == NULL)
+        return 0;
+
+    return column->nelements;
+}
+
+const char *cdfc_name(const cdfc *column)
+{
+    if (column == NULL)
+        return NULL;
+
+    return column->name;
+}

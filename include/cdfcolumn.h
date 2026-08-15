@@ -79,4 +79,14 @@ cdf_bool cdfc_get(const cdfc *column, cdf_usize index, void *out);
  */
 cdf_bool cdfc_set(cdfc *column, cdf_usize index, const void *value);
 
+/**
+ * Returns the number of elements currently stored in the column.
+ */
+cdf_usize cdfc_nelements(const cdfc *column);
+
+/**
+ * Returns the name of the column.
+ */
+const char *cdfc_name(const cdfc *column);
+
 #endif /* CDF_COLUMN_H_ */
