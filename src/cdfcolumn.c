@@ -62,7 +62,7 @@ void cdfc_destroy(cdfc **column)
     cdf_free(column);
 }
 
-static cdf_bool cdfc_reserve(cdfc *column, cdf_usize capacity)
+cdf_bool cdfc_reserve(cdfc *column, cdf_usize capacity)
 {
     void *elements;
     cdf_bool *is_empty;

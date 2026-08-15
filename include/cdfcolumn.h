@@ -28,6 +28,20 @@ cdf_bool cdfc_create(const char *name, cdfdtk kind, cdfc **out);
 void cdfc_destroy(cdfc **column);
 
 /**
+ * Reserves storage for at least the specified number of elements.
+ *
+ * Success:
+ *   Ensures the column has capacity for at least `capacity` elements while
+ *   preserving all existing elements.
+ *
+ * Failure:
+ *   Returns `cdf_false` if `column` is NULL, if the required allocation size
+ *   overflows, or if memory allocation fails. The column remains unchanged
+ *   on failure.
+ */
+cdf_bool cdfc_reserve(cdfc *column, cdf_usize capacity);
+
+/**
  * Appends an element to the end of the column.
  *
  * Success:
