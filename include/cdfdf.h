@@ -1,6 +1,9 @@
 #ifndef CDF_DF_H_
 #define CDF_DF_H_
 
+#include "cdftypes.h"
+#include "cdfcolumn.h"
+
 /*
  * Represents an entire data frame
  */

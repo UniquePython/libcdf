@@ -2,9 +2,6 @@
 
 #include "cdfmem.h"
 
-#include "cdftypes.h"
-#include "cdfcolumn.h"
-
 #include <string.h>
 
 struct cdfdf_t

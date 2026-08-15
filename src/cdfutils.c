@@ -1,5 +1,7 @@
 #include "cdfutils.h"
 
+#include "cdfmem.h"
+
 #include <string.h>
 
 cdf_bool cdf_strdup(const char *str, char **out)
