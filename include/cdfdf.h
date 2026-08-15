@@ -23,4 +23,19 @@ cdf_bool cdfdf_create(cdfdf **out);
  */
 void cdfdf_destroy(cdfdf **df);
 
+/**
+ * Adds a column to the data frame and takes ownership of it.
+ *
+ * Success:
+ *   Adds `*column` to the data frame, updates the column and row counts, and
+ *   sets `*column` to NULL.
+ *
+ * Failure:
+ *   Returns `cdf_false` if the data frame or column is NULL, the column has
+ *   an incompatible number of elements, a column with the same name already
+ *   exists, an allocation size overflows, or memory allocation fails. The
+ *   data frame and `*column` remain unchanged on failure.
+ */
+cdf_bool cdfdf_add_column(cdfdf *df, cdfc **column);
+
 #endif /* CDF_DF_H_ */
