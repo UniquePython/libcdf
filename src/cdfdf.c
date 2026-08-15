@@ -5,6 +5,8 @@
 #include "cdftypes.h"
 #include "cdfcolumn.h"
 
+#include <string.h>
+
 struct cdfdf_t
 {
     cdfc **cols;     // All the columns present in the data frame
@@ -81,4 +83,64 @@ cdf_bool cdfdf_add_column(cdfdf *df, cdfc **column)
         df->nrows = cdfc_nelements(df->cols[0]);
 
     return cdf_true;
+}
+
+cdf_bool cdfdf_column(const cdfdf *df, cdf_usize index, const cdfc **out)
+{
+    if (df == NULL || out == NULL)
+        return cdf_false;
+
+    if (index >= df->ncols)
+        return cdf_false;
+
+    *out = df->cols[index];
+
+    return cdf_true;
+}
+
+cdf_bool cdfdf_column_mut(cdfdf *df, cdf_usize index, cdfc **out)
+{
+    if (df == NULL || out == NULL)
+        return cdf_false;
+
+    if (index >= df->ncols)
+        return cdf_false;
+
+    *out = df->cols[index];
+
+    return cdf_true;
+}
+
+cdf_bool cdfdf_column_by_name(const cdfdf *df, const char *name, const cdfc **out)
+{
+    if (df == NULL || name == NULL || out == NULL)
+        return cdf_false;
+
+    for (cdf_usize i = 0; i < df->ncols; ++i)
+    {
+        if (strcmp(cdfc_name(df->cols[i]), name) == 0)
+        {
+            *out = df->cols[i];
+            return cdf_true;
+        }
+    }
+
+    return cdf_false;
+}
+
+cdf_bool cdfdf_column_by_name_mut(cdfdf *df, const char *name, cdfc **out)
+{
+    if (df == NULL || name == NULL || out == NULL)
+        return cdf_false;
+
+    for (cdf_usize i = 0; i < df->ncols; ++i)
+    {
+        if (strcmp(cdfc_name(df->cols[i]), name) == 0)
+        {
+            *out = df->cols[i];
+            return cdf_true;
+        }
+    }
+
+    return cdf_false;
 }
