@@ -2,6 +2,7 @@
 #define CDF_COLUMN_H_
 
 #include "cdftypes.h"
+#include "cdferr.h"
 
 /*
  * Represents a single data frame column
@@ -13,14 +14,16 @@ typedef struct cdfcolumn_t cdfc;
  *
  * Success:
  *   Allocates and initializes a new column, duplicates `name`, sets its data
- *   type kind to `kind`, and stores it in `*out`.
+ *   type kind to `kind`, and stores it in `*out`. `err`, if non-NULL, is
+ *   cleared.
  *
  * Failure:
  *   Returns `cdf_false` if `name` or `out` is NULL, if memory allocation
  *   fails, or if the column name cannot be duplicated. In all failure cases,
- *   `*out` is left untouched.
+ *   `*out` is left untouched, and `err`, if non-NULL, is populated with a
+ *   code and message describing the specific failure.
  */
-cdf_bool cdfc_create(const char *name, cdfdtk kind, cdfc **out);
+cdf_bool cdfc_create(const char *name, cdfdtk kind, cdfc **out, cdferr *err);
 
 /**
  * Destroys a column and releases all memory owned by it.
@@ -32,52 +35,60 @@ void cdfc_destroy(cdfc **column);
  *
  * Success:
  *   Ensures the column has capacity for at least `capacity` elements while
- *   preserving all existing elements.
+ *   preserving all existing elements. `err`, if non-NULL, is cleared.
  *
  * Failure:
  *   Returns `cdf_false` if `column` is NULL, if the required allocation size
  *   overflows, or if memory allocation fails. The column remains unchanged
- *   on failure.
+ *   on failure, and `err`, if non-NULL, is populated with a code and
+ *   message describing the specific failure.
  */
-cdf_bool cdfc_reserve(cdfc *column, cdf_usize capacity);
+cdf_bool cdfc_reserve(cdfc *column, cdf_usize capacity, cdferr *err);
 
 /**
  * Appends an element to the end of the column.
  *
  * Success:
  *   Copies `element` into the column, marks it as non-empty, and increments
- *   the number of elements.
+ *   the number of elements. `err`, if non-NULL, is cleared.
  *
  * Failure:
- *   Returns `cdf_false` if `column` or `element` is NULL, or if memory
- *   allocation fails. The column remains unchanged on failure.
+ *   Returns `cdf_false` if `column` or `element` is NULL, if the required
+ *   capacity growth overflows, or if memory allocation fails. The column
+ *   remains unchanged on failure, and `err`, if non-NULL, is populated with
+ *   a code and message describing the specific failure.
  */
-cdf_bool cdfc_append(cdfc *column, const void *element);
+cdf_bool cdfc_append(cdfc *column, const void *element, cdferr *err);
 
 /**
  * Copies the element at the specified index into the output buffer.
  *
  * Success:
- *   Copies the element into `out` and returns `cdf_true`.
+ *   Copies the element into `out` and returns `cdf_true`. `err`, if
+ *   non-NULL, is cleared.
  *
  * Failure:
  *   Returns `cdf_false` if `column` or `out` is NULL, if `index` is out of
- *   bounds, or if the element at `index` is empty. `out` is left untouched.
+ *   bounds, or if the element at `index` is empty. `out` is left untouched,
+ *   and `err`, if non-NULL, is populated with a code and message describing
+ *   the specific failure.
  */
-cdf_bool cdfc_get(const cdfc *column, cdf_usize index, void *out);
+cdf_bool cdfc_get(const cdfc *column, cdf_usize index, void *out, cdferr *err);
 
 /**
  * Sets the element at the specified index to the given value.
  *
  * Success:
  *   Copies `value` into the element at `index`, marks the element as
- *   non-empty, and returns `cdf_true`.
+ *   non-empty, and returns `cdf_true`. `err`, if non-NULL, is cleared.
  *
  * Failure:
  *   Returns `cdf_false` if `column` or `value` is NULL, or if `index` is out
- *   of bounds. The column remains unchanged on failure.
+ *   of bounds. The column remains unchanged on failure, and `err`, if
+ *   non-NULL, is populated with a code and message describing the specific
+ *   failure.
  */
-cdf_bool cdfc_set(cdfc *column, cdf_usize index, const void *value);
+cdf_bool cdfc_set(cdfc *column, cdf_usize index, const void *value, cdferr *err);
 
 /**
  * Returns the number of elements currently stored in the column.

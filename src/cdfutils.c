@@ -19,6 +19,5 @@ cdf_bool cdf_strdup(const char *str, char **out, cdferr *err)
     memcpy(copy, str, len + 1);
 
     *out = copy;
-    cdferr_clear(err);
-    return cdf_true;
+    success;
 }

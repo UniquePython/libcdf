@@ -57,10 +57,8 @@ cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out, cdferr *err)
 
     case CDFDTK_COUNT:
     default:
-        cdferr_set(err, CDFEC_INVALID_ARG, "kind is not a valid cdfdtk value");
-        return cdf_false;
+        fail(CDFEC_INVALID_ARG, "kind is not a valid cdfdtk value");
     }
 
-    cdferr_clear(err);
-    return cdf_true;
+    success;
 }
