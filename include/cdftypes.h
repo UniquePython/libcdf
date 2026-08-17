@@ -64,7 +64,29 @@ typedef struct cdf_data_type_t
     cdf_u8 size; // Cached size of data type in bytes
 } cdfdt;
 
-/** Initializes a data type descriptor for the specified data type kind. */
-cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out);
+/*
+ * Forward declaration of `cdferr`, defined in cdferr.h.
+ *
+ * cdftypes.h cannot include cdferr.h directly: cdferr.h itself depends on
+ * cdf_usize/cdf_bool from this header, which would create a circular
+ * include. A forward declaration is sufficient here since cdferr is only
+ * ever used behind a pointer in this header's function declarations.
+ */
+typedef struct cdferror_t cdferr;
+
+/**
+ * Initializes a data type descriptor for the specified data type kind.
+ *
+ * Success:
+ *   Populates `*out` with the given `kind` and its corresponding size.
+ *   `err`, if non-NULL, is cleared.
+ *
+ * Failure:
+ *   Returns `cdf_false` if `out` is NULL or if `kind` is not a valid
+ *   `cdfdtk` value. In all failure cases, `*out` is left untouched, and
+ *   `err`, if non-NULL, is populated with a code and message describing
+ *   the specific failure.
+ */
+cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out, cdferr *err);
 
 #endif /* CDF_TYPES_H_ */

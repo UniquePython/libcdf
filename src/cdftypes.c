@@ -1,9 +1,11 @@
 #include "cdftypes.h"
 
-cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out)
+#include "cdferr.h"
+
+cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out, cdferr *err)
 {
-    if (out == NULL || kind >= CDFDTK_COUNT)
-        return cdf_false;
+    handle_null(out);
+    handle_fail(kind >= CDFDTK_COUNT, CDFEC_INVALID_ARG, "kind is not a valid cdfdtk value");
 
     out->kind = kind;
 
@@ -55,8 +57,10 @@ cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out)
 
     case CDFDTK_COUNT:
     default:
+        cdferr_set(err, CDFEC_INVALID_ARG, "kind is not a valid cdfdtk value");
         return cdf_false;
     }
 
+    cdferr_clear(err);
     return cdf_true;
 }
