@@ -18,7 +18,7 @@ cdf_bool cdfdf_create(cdfdf **out)
     if (out == NULL)
         return cdf_false;
 
-    if (!cdf_alloc(sizeof(*df), &df))
+    if (!cdf_alloc_one(&df))
         return cdf_false;
 
     df->cols = NULL;

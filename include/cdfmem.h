@@ -20,6 +20,22 @@ cdf_bool cdf_realloc_impl(cdf_usize size, void **ptr);
 #define cdf_alloc(size, out) cdf_alloc_impl(size, (void **)out)
 
 /**
+ * Allocates enough uninitialized memory for one object of the type pointed to
+ * by `out`.
+ *
+ * Success:
+ *   Allocates `sizeof(**out)` bytes and stores the resulting pointer in
+ *   `*out`.
+ *
+ * Failure:
+ *   Returns `cdf_false` if `out` is NULL or allocation fails. In all failure
+ *   cases, `*out` is left untouched.
+ *
+ * `out` must be a pointer to an object pointer (e.g. `foo **`).
+ */
+#define cdf_alloc_one(out) cdf_alloc(sizeof(**(out)), (out))
+
+/**
  * Frees memory previously allocated by the CDF memory allocator.
  *
  * Safely accepts NULL and sets `*ptr` to NULL after freeing.

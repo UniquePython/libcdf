@@ -23,7 +23,7 @@ cdf_bool cdfc_create(const char *name, cdfdtk kind, cdfc **out, cdferr *err)
     cdfdt type;
 
     cdf_handle_null_2(name, out);
-    cdf_handle_fail(!cdf_alloc(sizeof(*column), &column), CDFEC_ALLOC_FAILED, "failed to allocate memory for column");
+    cdf_handle_fail(!cdf_alloc_one(&column), CDFEC_ALLOC_FAILED, "failed to allocate memory for column");
 
     column->name = NULL;
     column->nelements = 0;
