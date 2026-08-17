@@ -1,13 +1,16 @@
 #include "cdf_test.h"
 #include "cdftypes.h"
+#include "cdferr.h"
 
 static void check_kind(cdfdtk kind, cdf_u8 expected_size)
 {
     cdfdt dt;
+    cdferr err = {0};
 
-    CDF_CHECK(cdfdt_new(kind, &dt));
+    CDF_CHECK(cdfdt_new(kind, &dt, &err));
     CDF_CHECK(dt.kind == kind);
     CDF_CHECK(dt.size == expected_size);
+    CDF_CHECK(err.code == CDFEC_NONE);
 }
 
 static void test_all_kinds(void)
@@ -28,17 +31,27 @@ static void test_all_kinds(void)
 static void test_invalid_kind(void)
 {
     cdfdt dt;
+    cdferr err = {0};
 
     /* CDFDTK_COUNT is the sentinel, not a real kind: must fail */
-    CDF_CHECK(!cdfdt_new(CDFDTK_COUNT, &dt));
+    CDF_CHECK(!cdfdt_new(CDFDTK_COUNT, &dt, &err));
+    CDF_CHECK(err.code == CDFEC_INVALID_ARG);
 
     /* anything past the sentinel must also fail */
-    CDF_CHECK(!cdfdt_new((cdfdtk)(CDFDTK_COUNT + 1), &dt));
+    err = (cdferr){0};
+    CDF_CHECK(!cdfdt_new((cdfdtk)(CDFDTK_COUNT + 1), &dt, &err));
+    CDF_CHECK(err.code == CDFEC_INVALID_ARG);
 }
 
 static void test_null_out(void)
 {
-    CDF_CHECK(!cdfdt_new(CDFDTK_I32, NULL));
+    cdferr err = {0};
+
+    CDF_CHECK(!cdfdt_new(CDFDTK_I32, NULL, &err));
+    CDF_CHECK(err.code == CDFEC_INVALID_ARG);
+
+    /* NULL err must be safely accepted */
+    CDF_CHECK(!cdfdt_new(CDFDTK_I32, NULL, NULL));
 }
 
 int main(void)
