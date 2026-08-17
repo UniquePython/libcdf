@@ -144,6 +144,27 @@ void cdferr_print(const cdferr *err);
 
 #define cdf_handle_null_custom_2(var1, msg1, var2, msg2) cdf_handle_null_custom_explicit_2(var1, msg1, var2, msg2, err)
 
+#define cdf_handle_null_explicit_3(var1, var2, var3, err) \
+    do                                                    \
+    {                                                     \
+        cdf_handle_null_explicit(var1, err);              \
+        cdf_handle_null_explicit(var2, err);              \
+        cdf_handle_null_explicit(var3, err);              \
+    } while (0)
+
+#define cdf_handle_null_3(var1, var2, var3) cdf_handle_null_explicit_3(var1, var2, var3, err)
+
+#define cdf_handle_null_custom_explicit_3(var1, msg1, var2, msg2, var3, msg3, err) \
+    do                                                                             \
+    {                                                                              \
+        cdf_handle_null_custom_explicit(var1, msg1, err);                          \
+        cdf_handle_null_custom_explicit(var2, msg2, err);                          \
+        cdf_handle_null_custom_explicit(var3, msg3, err);                          \
+    } while (0)
+
+#define cdf_handle_null_custom_3(var1, msg1, var2, msg2, var3, msg3) \
+    cdf_handle_null_custom_explicit_3(var1, msg1, var2, msg2, var3, msg3, err)
+
 #define cdf_fail_explicit(code, msg, err) \
     do                                    \
     {                                     \
