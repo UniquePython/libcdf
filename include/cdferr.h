@@ -97,7 +97,7 @@ void cdferr_set_impl(cdferr *err, cdfec code, const char *msg,
  */
 void cdferr_print(const cdferr *err);
 
-#define handle_null_explicit(var, err)                             \
+#define cdf_handle_null_explicit(var, err)                         \
     do                                                             \
     {                                                              \
         if ((var) == NULL)                                         \
@@ -107,23 +107,23 @@ void cdferr_print(const cdferr *err);
         }                                                          \
     } while (0)
 
-#define handle_null_explicit_2(var1, var2, err) \
-    do                                          \
-    {                                           \
-        handle_null_explicit(var1, err);        \
-        handle_null_explicit(var2, err);        \
+#define cdf_handle_null_explicit_2(var1, var2, err) \
+    do                                              \
+    {                                               \
+        cdf_handle_null_explicit(var1, err);        \
+        cdf_handle_null_explicit(var2, err);        \
     } while (0)
 
-#define handle_null(var) handle_null_explicit(var, err)
+#define cdf_handle_null(var) cdf_handle_null_explicit(var, err)
 
-#define handle_null_2(var1, var2) \
-    do                            \
-    {                             \
-        handle_null(var1);        \
-        handle_null(var2);        \
+#define cdf_handle_null_2(var1, var2) \
+    do                                \
+    {                                 \
+        cdf_handle_null(var1);        \
+        cdf_handle_null(var2);        \
     } while (0)
 
-#define handle_null_custom_explicit(var, msg, err)     \
+#define cdf_handle_null_custom_explicit(var, msg, err) \
     do                                                 \
     {                                                  \
         if ((var) == NULL)                             \
@@ -133,42 +133,42 @@ void cdferr_print(const cdferr *err);
         }                                              \
     } while (0)
 
-#define handle_null_custom_explicit_2(var1, msg1, var2, msg2, err) \
-    do                                                             \
-    {                                                              \
-        handle_null_custom_explicit(var1, msg1, err);              \
-        handle_null_custom_explicit(var2, msg2, err);              \
+#define cdf_handle_null_custom_explicit_2(var1, msg1, var2, msg2, err) \
+    do                                                                 \
+    {                                                                  \
+        cdf_handle_null_custom_explicit(var1, msg1, err);              \
+        cdf_handle_null_custom_explicit(var2, msg2, err);              \
     } while (0)
 
-#define handle_null_custom(var, msg) handle_null_custom_explicit(var, msg, err)
+#define cdf_handle_null_custom(var, msg) cdf_handle_null_custom_explicit(var, msg, err)
 
-#define handle_null_custom_2(var1, msg1, var2, msg2) handle_null_custom_explicit_2(var1, msg1, var2, msg2, err)
+#define cdf_handle_null_custom_2(var1, msg1, var2, msg2) cdf_handle_null_custom_explicit_2(var1, msg1, var2, msg2, err)
 
-#define fail_explicit(code, msg, err)     \
+#define cdf_fail_explicit(code, msg, err) \
     do                                    \
     {                                     \
         cdferr_set((err), (code), (msg)); \
         return cdf_false;                 \
     } while (0)
 
-#define fail(code, msg) fail_explicit(code, msg, err)
+#define cdf_fail(code, msg) cdf_fail_explicit(code, msg, err)
 
-#define handle_fail_explicit(cond, code, msg, err) \
-    do                                             \
-    {                                              \
-        if ((cond))                                \
-            fail((code), (msg));                   \
+#define cdf_handle_fail_explicit(cond, code, msg, err) \
+    do                                                 \
+    {                                                  \
+        if ((cond))                                    \
+            cdf_fail_explicit((code), (msg), (err));   \
     } while (0)
 
-#define handle_fail(cond, code, msg) handle_fail_explicit(cond, code, msg, err)
+#define cdf_handle_fail(cond, code, msg) cdf_handle_fail_explicit(cond, code, msg, err)
 
-#define success_explicit(err) \
-    do                        \
-    {                         \
-        cdferr_clear((err));  \
-        return cdf_true;      \
+#define cdf_success_explicit(err) \
+    do                            \
+    {                             \
+        cdferr_clear((err));      \
+        return cdf_true;          \
     } while (0)
 
-#define success success_explicit(err)
+#define cdf_success cdf_success_explicit(err)
 
 #endif /* CDF_ERR_H_ */

@@ -22,8 +22,8 @@ cdf_bool cdfc_create(const char *name, cdfdtk kind, cdfc **out, cdferr *err)
     cdfc *column;
     cdfdt type;
 
-    handle_null_2(name, out);
-    handle_fail(!cdf_alloc(sizeof(*column), &column), CDFEC_ALLOC_FAILED, "failed to allocate memory for column");
+    cdf_handle_null_2(name, out);
+    cdf_handle_fail(!cdf_alloc(sizeof(*column), &column), CDFEC_ALLOC_FAILED, "failed to allocate memory for column");
 
     column->name = NULL;
     column->nelements = 0;
@@ -40,7 +40,7 @@ cdf_bool cdfc_create(const char *name, cdfdtk kind, cdfc **out, cdferr *err)
     column->type = type;
 
     *out = column;
-    success;
+    cdf_success;
 }
 
 void cdfc_destroy(cdfc **column)
@@ -61,26 +61,26 @@ cdf_bool cdfc_reserve(cdfc *column, cdf_usize capacity, cdferr *err)
     cdf_usize element_bytes;
     cdf_usize empty_bytes;
 
-    handle_null(column);
+    cdf_handle_null(column);
 
     if (capacity <= column->capacity)
-        success;
+        cdf_success;
 
-    handle_fail(column->type.size != 0 && capacity > SIZE_MAX / column->type.size,
-                CDFEC_SIZE_OVERFLOW, "element buffer size overflows");
+    cdf_handle_fail(column->type.size != 0 && capacity > SIZE_MAX / column->type.size,
+                    CDFEC_SIZE_OVERFLOW, "element buffer size overflows");
 
-    handle_fail(capacity > SIZE_MAX / sizeof(*is_empty),
-                CDFEC_SIZE_OVERFLOW, "is_empty buffer size overflows");
+    cdf_handle_fail(capacity > SIZE_MAX / sizeof(*is_empty),
+                    CDFEC_SIZE_OVERFLOW, "is_empty buffer size overflows");
 
     element_bytes = capacity * column->type.size;
     empty_bytes = capacity * sizeof(*is_empty);
 
-    handle_fail(!cdf_alloc(element_bytes, &elements), CDFEC_ALLOC_FAILED, "failed to allocate element buffer");
+    cdf_handle_fail(!cdf_alloc(element_bytes, &elements), CDFEC_ALLOC_FAILED, "failed to allocate element buffer");
 
     if (!cdf_alloc(empty_bytes, &is_empty))
     {
         cdf_free(&elements);
-        fail(CDFEC_ALLOC_FAILED, "failed to allocate is_empty buffer");
+        cdf_fail(CDFEC_ALLOC_FAILED, "failed to allocate is_empty buffer");
     }
 
     /*
@@ -99,7 +99,7 @@ cdf_bool cdfc_reserve(cdfc *column, cdf_usize capacity, cdferr *err)
     column->is_empty = is_empty;
     column->capacity = capacity;
 
-    success;
+    cdf_success;
 }
 
 static cdf_bool cdfc_grow_capacity(cdf_usize current, cdf_usize *out)
@@ -122,14 +122,14 @@ cdf_bool cdfc_append(cdfc *column, const void *element, cdferr *err)
     cdf_usize index;
     cdf_usize offset;
 
-    handle_null_2(column, element);
+    cdf_handle_null_2(column, element);
 
     if (column->nelements == column->capacity)
     {
         cdf_usize new_capacity;
 
-        handle_fail(!cdfc_grow_capacity(column->capacity, &new_capacity),
-                    CDFEC_SIZE_OVERFLOW, "capacity growth overflows");
+        cdf_handle_fail(!cdfc_grow_capacity(column->capacity, &new_capacity),
+                        CDFEC_SIZE_OVERFLOW, "capacity growth overflows");
 
         if (!cdfc_reserve(column, new_capacity, err))
             return cdf_false;
@@ -143,27 +143,27 @@ cdf_bool cdfc_append(cdfc *column, const void *element, cdferr *err)
     column->is_empty[index] = cdf_false;
     column->nelements++;
 
-    success;
+    cdf_success;
 }
 
 cdf_bool cdfc_get(const cdfc *column, cdf_usize index, void *out, cdferr *err)
 {
-    handle_null_2(column, out);
-    handle_fail(index >= column->nelements, CDFEC_INDEX_OUT_OF_BOUNDS, "index is out of bounds");
-    handle_fail(column->is_empty[index], CDFEC_ELEMENT_EMPTY, "element at index is empty");
+    cdf_handle_null_2(column, out);
+    cdf_handle_fail(index >= column->nelements, CDFEC_INDEX_OUT_OF_BOUNDS, "index is out of bounds");
+    cdf_handle_fail(column->is_empty[index], CDFEC_ELEMENT_EMPTY, "element at index is empty");
     memcpy(out, (const char *)column->elements + index * column->type.size, column->type.size);
-    success;
+    cdf_success;
 }
 
 cdf_bool cdfc_set(cdfc *column, cdf_usize index, const void *value, cdferr *err)
 {
-    handle_null_2(column, value);
-    handle_fail(index >= column->nelements, CDFEC_INDEX_OUT_OF_BOUNDS, "index is out of bounds");
+    cdf_handle_null_2(column, value);
+    cdf_handle_fail(index >= column->nelements, CDFEC_INDEX_OUT_OF_BOUNDS, "index is out of bounds");
 
     memcpy((char *)column->elements + index * column->type.size, value, column->type.size);
     column->is_empty[index] = cdf_false;
 
-    success;
+    cdf_success;
 }
 
 cdf_usize cdfc_nelements(const cdfc *column)

@@ -4,8 +4,8 @@
 
 cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out, cdferr *err)
 {
-    handle_null(out);
-    handle_fail(kind >= CDFDTK_COUNT, CDFEC_INVALID_ARG, "kind is not a valid cdfdtk value");
+    cdf_handle_null(out);
+    cdf_handle_fail(kind >= CDFDTK_COUNT, CDFEC_INVALID_ARG, "kind is not a valid cdfdtk value");
 
     out->kind = kind;
 
@@ -57,8 +57,8 @@ cdf_bool cdfdt_new(cdfdtk kind, cdfdt *out, cdferr *err)
 
     case CDFDTK_COUNT:
     default:
-        fail(CDFEC_INVALID_ARG, "kind is not a valid cdfdtk value");
+        cdf_fail(CDFEC_INVALID_ARG, "kind is not a valid cdfdtk value");
     }
 
-    success;
+    cdf_success;
 }
