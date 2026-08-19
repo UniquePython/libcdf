@@ -97,6 +97,83 @@ void cdferr_set_impl(cdferr *err, cdfec code, const char *msg,
  */
 void cdferr_print(const cdferr *err);
 
+/**
+ * Sets `err` to the given code and message (via `cdferr_set`) and returns
+ * `cdf_false` from the current function.
+ *
+ * Intended for the common case where a failure should immediately abort the
+ * calling function. Requires a local variable named `err` of type `cdferr *`
+ * in scope; use `cdf_fail_explicit` if a different name is in scope.
+ */
+#define cdf_fail(code, msg) cdf_fail_explicit(code, msg, err)
+
+/**
+ * Like `cdf_fail`, but takes `err` explicitly instead of assuming a local
+ * variable of that name is in scope.
+ */
+#define cdf_fail_explicit(code, msg, err) \
+    do                                    \
+    {                                     \
+        cdferr_set((err), (code), (msg)); \
+        return cdf_false;                 \
+    } while (0)
+
+/**
+ * Clears `err` (via `cdferr_clear`) and returns `cdf_true` from the current
+ * function.
+ *
+ * Intended to be the final statement of a successful fallible function, so
+ * that `err` never holds stale information from a previous call. Requires a
+ * local variable named `err` of type `cdferr *` in scope; use
+ * `cdf_success_explicit` if a different name is in scope.
+ */
+#define cdf_success cdf_success_explicit(err)
+
+/**
+ * Like `cdf_success`, but takes `err` explicitly instead of assuming a local
+ * variable of that name is in scope.
+ */
+#define cdf_success_explicit(err) \
+    do                            \
+    {                             \
+        cdferr_clear((err));      \
+        return cdf_true;          \
+    } while (0)
+
+/**
+ * If `cond` is true, fails with the given code and message (see `cdf_fail`).
+ * Otherwise, does nothing and execution continues normally.
+ *
+ * Requires a local variable named `err` of type `cdferr *` in scope; use
+ * `cdf_handle_fail_explicit` if a different name is in scope.
+ */
+#define cdf_handle_fail(cond, code, msg) cdf_handle_fail_explicit(cond, code, msg, err)
+
+/**
+ * Like `cdf_handle_fail`, but takes `err` explicitly instead of assuming a
+ * local variable of that name is in scope.
+ */
+#define cdf_handle_fail_explicit(cond, code, msg, err) \
+    do                                                 \
+    {                                                  \
+        if ((cond))                                    \
+            cdf_fail_explicit((code), (msg), (err));   \
+    } while (0)
+
+/**
+ * If `var` is NULL, fails with `CDFEC_INVALID_ARG` and a message of the form
+ * "`var` is NULL" (see `cdf_fail`). Otherwise, does nothing.
+ *
+ * Requires a local variable named `err` of type `cdferr *` in scope; use
+ * `cdf_handle_null_explicit` if a different name is in scope. For a custom
+ * message, use `cdf_handle_null_custom` instead.
+ */
+#define cdf_handle_null(var) cdf_handle_null_explicit(var, err)
+
+/**
+ * Like `cdf_handle_null`, but takes `err` explicitly instead of assuming a
+ * local variable of that name is in scope.
+ */
 #define cdf_handle_null_explicit(var, err)                         \
     do                                                             \
     {                                                              \
@@ -107,15 +184,9 @@ void cdferr_print(const cdferr *err);
         }                                                          \
     } while (0)
 
-#define cdf_handle_null_explicit_2(var1, var2, err) \
-    do                                              \
-    {                                               \
-        cdf_handle_null_explicit(var1, err);        \
-        cdf_handle_null_explicit(var2, err);        \
-    } while (0)
-
-#define cdf_handle_null(var) cdf_handle_null_explicit(var, err)
-
+/**
+ * Applies `cdf_handle_null` to each of `var1` and `var2`, in order.
+ */
 #define cdf_handle_null_2(var1, var2) \
     do                                \
     {                                 \
@@ -123,6 +194,47 @@ void cdferr_print(const cdferr *err);
         cdf_handle_null(var2);        \
     } while (0)
 
+/**
+ * Like `cdf_handle_null_2`, but takes `err` explicitly instead of assuming a
+ * local variable of that name is in scope.
+ */
+#define cdf_handle_null_explicit_2(var1, var2, err) \
+    do                                              \
+    {                                               \
+        cdf_handle_null_explicit(var1, err);        \
+        cdf_handle_null_explicit(var2, err);        \
+    } while (0)
+
+/**
+ * Applies `cdf_handle_null` to each of `var1`, `var2`, and `var3`, in order.
+ */
+#define cdf_handle_null_3(var1, var2, var3) cdf_handle_null_explicit_3(var1, var2, var3, err)
+
+/**
+ * Like `cdf_handle_null_3`, but takes `err` explicitly instead of assuming a
+ * local variable of that name is in scope.
+ */
+#define cdf_handle_null_explicit_3(var1, var2, var3, err) \
+    do                                                    \
+    {                                                     \
+        cdf_handle_null_explicit(var1, err);              \
+        cdf_handle_null_explicit(var2, err);              \
+        cdf_handle_null_explicit(var3, err);              \
+    } while (0)
+
+/**
+ * Like `cdf_handle_null`, but fails with `msg` instead of a canned
+ * "`var` is NULL" message.
+ *
+ * Requires a local variable named `err` of type `cdferr *` in scope; use
+ * `cdf_handle_null_custom_explicit` if a different name is in scope.
+ */
+#define cdf_handle_null_custom(var, msg) cdf_handle_null_custom_explicit(var, msg, err)
+
+/**
+ * Like `cdf_handle_null_custom`, but takes `err` explicitly instead of
+ * assuming a local variable of that name is in scope.
+ */
 #define cdf_handle_null_custom_explicit(var, msg, err) \
     do                                                 \
     {                                                  \
@@ -133,6 +245,16 @@ void cdferr_print(const cdferr *err);
         }                                              \
     } while (0)
 
+/**
+ * Applies `cdf_handle_null_custom` to `(var1, msg1)` and then `(var2, msg2)`,
+ * in order.
+ */
+#define cdf_handle_null_custom_2(var1, msg1, var2, msg2) cdf_handle_null_custom_explicit_2(var1, msg1, var2, msg2, err)
+
+/**
+ * Like `cdf_handle_null_custom_2`, but takes `err` explicitly instead of
+ * assuming a local variable of that name is in scope.
+ */
 #define cdf_handle_null_custom_explicit_2(var1, msg1, var2, msg2, err) \
     do                                                                 \
     {                                                                  \
@@ -140,20 +262,17 @@ void cdferr_print(const cdferr *err);
         cdf_handle_null_custom_explicit(var2, msg2, err);              \
     } while (0)
 
-#define cdf_handle_null_custom(var, msg) cdf_handle_null_custom_explicit(var, msg, err)
+/**
+ * Applies `cdf_handle_null_custom` to `(var1, msg1)`, `(var2, msg2)`, and
+ * `(var3, msg3)`, in order.
+ */
+#define cdf_handle_null_custom_3(var1, msg1, var2, msg2, var3, msg3) \
+    cdf_handle_null_custom_explicit_3(var1, msg1, var2, msg2, var3, msg3, err)
 
-#define cdf_handle_null_custom_2(var1, msg1, var2, msg2) cdf_handle_null_custom_explicit_2(var1, msg1, var2, msg2, err)
-
-#define cdf_handle_null_explicit_3(var1, var2, var3, err) \
-    do                                                    \
-    {                                                     \
-        cdf_handle_null_explicit(var1, err);              \
-        cdf_handle_null_explicit(var2, err);              \
-        cdf_handle_null_explicit(var3, err);              \
-    } while (0)
-
-#define cdf_handle_null_3(var1, var2, var3) cdf_handle_null_explicit_3(var1, var2, var3, err)
-
+/**
+ * Like `cdf_handle_null_custom_3`, but takes `err` explicitly instead of
+ * assuming a local variable of that name is in scope.
+ */
 #define cdf_handle_null_custom_explicit_3(var1, msg1, var2, msg2, var3, msg3, err) \
     do                                                                             \
     {                                                                              \
@@ -161,35 +280,5 @@ void cdferr_print(const cdferr *err);
         cdf_handle_null_custom_explicit(var2, msg2, err);                          \
         cdf_handle_null_custom_explicit(var3, msg3, err);                          \
     } while (0)
-
-#define cdf_handle_null_custom_3(var1, msg1, var2, msg2, var3, msg3) \
-    cdf_handle_null_custom_explicit_3(var1, msg1, var2, msg2, var3, msg3, err)
-
-#define cdf_fail_explicit(code, msg, err) \
-    do                                    \
-    {                                     \
-        cdferr_set((err), (code), (msg)); \
-        return cdf_false;                 \
-    } while (0)
-
-#define cdf_fail(code, msg) cdf_fail_explicit(code, msg, err)
-
-#define cdf_handle_fail_explicit(cond, code, msg, err) \
-    do                                                 \
-    {                                                  \
-        if ((cond))                                    \
-            cdf_fail_explicit((code), (msg), (err));   \
-    } while (0)
-
-#define cdf_handle_fail(cond, code, msg) cdf_handle_fail_explicit(cond, code, msg, err)
-
-#define cdf_success_explicit(err) \
-    do                            \
-    {                             \
-        cdferr_clear((err));      \
-        return cdf_true;          \
-    } while (0)
-
-#define cdf_success cdf_success_explicit(err)
 
 #endif /* CDF_ERR_H_ */
